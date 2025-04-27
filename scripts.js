@@ -2,7 +2,7 @@
 const API_CONFIG = {
     endpoint: "https://openrouter.ai/api/v1/chat/completions",
     // SUA NOVA CHAVE DEEPSEEK (codificada em base64)
-    apiKey: atob("c2stb3ItdjEtMDI1Mjk5NDgyMTQ3M2ZmODE4N2RkY2I0MGVlNTZjMjUyOWIyYmQ4MmMwYmJkYTcxZWY0MmNjNmVmMGI5ZDRlMw=="),
+    apiKey: btoa("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")
     model: "deepseek-chat"  // Modelo DeepSeek
 };
 
