@@ -1,10 +1,11 @@
 // Configurações da API (ofuscada)
 const API_CONFIG = {
     endpoint: "https://openrouter.ai/api/v1/chat/completions",
-    // Chave codificada em base64 (não é segurança real, apenas ofuscação básica)
-    apiKey: atob("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"),
+    // SUA NOVA CHAVE (codificada em base64)
+    apiKey: atob("c2stb3ItdjEtM2FmMzhhNTEwZWU5MWFiNGRlYzUzZTVjYzcwN2I2MWM5YWNjNmRmMmVkNDk3OTFmMmM0MjUzODY0YmZjMDAwOQ=="),
     model: "openai/gpt-3.5-turbo"
 };
+
 
 document.getElementById('generate-btn').addEventListener('click', async function() {
     const city = document.getElementById('city').value.trim();
