@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TravelGenius - Roteiros com DeepSeek V3</title>
+    <title>TravelGenius - Roteiros com DeepSeek</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -166,11 +166,11 @@
     </main>
 
     <script>
-        // Configuração da API DeepSeek V3 via OpenRouter
+        // Configuração CORRETA para DeepSeek no OpenRouter
         const API_CONFIG = {
             endpoint: "https://openrouter.ai/api/v1/chat/completions",
             apiKey: "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",
-            model: "deepseek-ai/deepseek-chat"
+            model: "deepseek-chat" // Model ID correto para DeepSeek
         };
 
         document.getElementById('generate-btn').addEventListener('click', async function() {
@@ -189,33 +189,35 @@
             try {
                 const prompt = `Você é um especialista em planejamento de viagens. Crie um roteiro detalhado para ${city} com ${days} dias de duração.
                 
-                Requisitos:
-                - Interesses do viajante: ${interests || 'gerais'}
-                - Formato de resposta em HTML
-                - Divida por dias (Dia 1, Dia 2, etc.)
-                - Para cada dia, inclua:
-                  * Manhã: Atividades com horários e descrição
-                  * Tarde: Atividades com horários e descrição
-                  * Noite: Sugestões de restaurantes e atividades
-                - Inclua dicas locais e informações práticas
+                Interesses do viajante: ${interests || 'gerais'}
                 
-                Estrutura HTML esperada:
+                Formato de resposta:
+                - HTML bem formatado
+                - Dividido por dias (Dia 1, Dia 2, etc.)
+                - Para cada dia, organize em manhã, tarde e noite
+                - Inclua atrações principais, restaurantes e dicas locais
+                - Use classes CSS: itinerary-day, time-slot, attraction
+                
+                Exemplo de estrutura:
                 <div class="itinerary-day">
-                    <h3>Dia X: Título do dia</h3>
+                    <h3>Dia 1: Explorando o Centro</h3>
                     <div class="time-slot">
                         <h4>Manhã</h4>
-                        <ul>...</ul>
+                        <div class="attraction">
+                            <h5>Museu Nacional</h5>
+                            <p>Visita ao principal museu da cidade...</p>
+                        </div>
                     </div>
-                    <!-- Repetir para tarde e noite -->
                 </div>`;
                 
+                console.log("Enviando requisição para a API...");
                 const response = await fetch(API_CONFIG.endpoint, {
                     method: "POST",
                     headers: {
                         "Authorization": `Bearer ${API_CONFIG.apiKey}`,
                         "Content-Type": "application/json",
-                        "HTTP-Referer": window.location.href,
-                        "X-Title": "TravelGenius"
+                        "HTTP-Referer": window.location.href, // Obrigatório
+                        "X-Title": "TravelGenius App" // Obrigatório
                     },
                     body: JSON.stringify({
                         model: API_CONFIG.model,
@@ -225,17 +227,26 @@
                     })
                 });
                 
+                console.log("Resposta recebida, status:", response.status);
+                
                 if (!response.ok) {
                     const errorData = await response.json();
+                    console.error("Erro da API:", errorData);
                     throw new Error(errorData.error?.message || "Erro na API");
                 }
                 
                 const data = await response.json();
-                document.getElementById('result').innerHTML = data.choices[0].message.content;
-                document.getElementById('result').style.display = 'block';
+                console.log("Dados recebidos:", data);
+                
+                if (data.choices && data.choices[0]?.message?.content) {
+                    document.getElementById('result').innerHTML = data.choices[0].message.content;
+                    document.getElementById('result').style.display = 'block';
+                } else {
+                    throw new Error("Resposta da API em formato inesperado");
+                }
                 
             } catch (error) {
-                console.error("Erro na requisição:", error);
+                console.error("Erro completo:", error);
                 showError(`Falha ao gerar roteiro: ${error.message}`);
             } finally {
                 toggleLoading(false);
