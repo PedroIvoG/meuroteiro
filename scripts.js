@@ -1,11 +1,10 @@
 // Configurações da API (ofuscada)
 const API_CONFIG = {
     endpoint: "https://openrouter.ai/api/v1/chat/completions",
-    // SUA NOVA CHAVE (codificada em base64)
-    apiKey: atob("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"),
-    model: "openai/gpt-3.5-turbo"
+    // SUA NOVA CHAVE DEEPSEEK (codificada em base64)
+    apiKey: atob("c2stb3ItdjEtMDI1Mjk5NDgyMTQ3M2ZmODE4N2RkY2I0MGVlNTZjMjUyOWIyYmQ4MmMwYmJkYTcxZWY0MmNjNmVmMGI5ZDRlMw=="),
+    model: "deepseek-chat"  // Modelo DeepSeek
 };
-
 
 document.getElementById('generate-btn').addEventListener('click', async function() {
     const city = document.getElementById('city').value.trim();
@@ -33,40 +32,41 @@ document.getElementById('generate-btn').addEventListener('click', async function
 });
 
 async function generateAIItinerary(city, days, interests, travelStyle) {
-    const prompt = `Atue como um especialista em planejamento de viagens. 
-    Crie um roteiro ULTRA DETALHADO para ${city} com ${days} dias de duração.
-    
-    DETALHES DO VIAJANTE:
+    const prompt = `Atue como um especialista em planejamento de viagens da DeepSeek. 
+    Crie um roteiro COMPLETO para ${city} com ${days} dias.
+
+    DETALHES:
     - Interesses: ${interests || 'história, cultura, gastronomia'}
-    - Estilo de viagem: ${getTravelStyleName(travelStyle)}
-    
-    FORMATO REQUISITADO:
-    1. Organize por dias (Dia 1, Dia 2, etc.)
-    2. Para cada dia, inclua:
-       - Manhã: Atividades detalhadas com horários
-       - Tarde: Atividades detalhadas com horários
-       - Noite: Atividades detalhadas com horários
-    3. Para cada atração, inclua:
-       - Nome do local
-       - Descrição detalhada
-       - Tempo médio de visita
-       - Dicas específicas
-    4. Inclua sugestões de restaurantes para cada refeição
-    
-    Retorne APENAS o conteúdo HTML formatado usando estas classes:
+    - Estilo: ${getTravelStyleName(travelStyle)}
+    - Formato:
+      * Dias divididos em manhã/tarde/noite
+      * Cada atividade com:
+        - Nome do local
+        - Descrição detalhada
+        - Horário recomendado
+        - Tempo estimado
+        - Dicas práticas
+      * Sugestões de restaurantes com:
+        - Tipo de culinária
+        - Faixa de preço
+        - Especialidades
+
+    RETORNE em HTML com classes:
     - itinerary-card, day-title, time-slot, attraction, tips`;
 
-    const response = await callOpenRouterAPI(prompt);
+    const response = await callDeepSeekAPI(prompt);
     return formatAIResponse(response, city, days);
 }
 
-async function callOpenRouterAPI(prompt) {
+async function callDeepSeekAPI(prompt) {
     try {
         const response = await fetch(API_CONFIG.endpoint, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${API_CONFIG.apiKey}`
+                "Authorization": `Bearer ${API_CONFIG.apiKey}`,
+                "HTTP-Referer": window.location.href,  // Requerido pelo OpenRouter
+                "X-Title": "TravelGenius"             // Identificação do app
             },
             body: JSON.stringify({
                 model: API_CONFIG.model,
@@ -78,65 +78,13 @@ async function callOpenRouterAPI(prompt) {
         
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.error?.message || "Erro na API");
+            throw new Error(errorData.error?.message || "Erro na API DeepSeek");
         }
         
         return await response.json();
     } catch (error) {
-        throw new Error("Falha ao conectar com o serviço de IA. Tente novamente.");
+        throw new Error("Falha ao conectar com a DeepSeek. Tente novamente.");
     }
 }
 
-function formatAIResponse(response, city, days) {
-    if (!response.choices || !response.choices[0]?.message?.content) {
-        throw new Error("A API não retornou um roteiro válido.");
-    }
-    
-    let content = response.choices[0].message.content;
-    
-    // Sanitização básica
-    content = content.replace(/<script.*?>.*?<\/script>/gi, '');
-    
-    // Adiciona título se não existir
-    if (!content.includes('<h2') && !content.includes('<h1')) {
-        content = `
-        <div class="itinerary-card">
-            <h2 style="color: var(--primary); text-align: center; margin-bottom: 1.5rem;">
-                Roteiro para ${city} - ${days} dias
-            </h2>
-            ${content}
-        </div>`;
-    }
-    
-    return content;
-}
-
-function displayItinerary(content) {
-    const resultDiv = document.getElementById('result');
-    resultDiv.innerHTML = content;
-    resultDiv.style.display = 'block';
-}
-
-function showError(message) {
-    const resultDiv = document.getElementById('result');
-    resultDiv.innerHTML = `<div class="error">${message}</div>`;
-    resultDiv.style.display = 'block';
-}
-
-function clearResult() {
-    document.getElementById('result').style.display = 'none';
-}
-
-function toggleLoading(show) {
-    document.getElementById('loading').style.display = show ? 'block' : 'none';
-    document.getElementById('generate-btn').disabled = show;
-}
-
-function getTravelStyleName(value) {
-    const styles = {
-        'relaxed': 'Relaxado (mais tempo em cada lugar)',
-        'moderate': 'Moderado (equilíbrio entre atividades)',
-        'intense': 'Intenso (muitas atividades e exploração)'
-    };
-    return styles[value] || value;
-}
+// ... (mantenha as demais funções como displayItinerary, showError, etc. do código anterior)
