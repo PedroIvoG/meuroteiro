@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -166,11 +166,11 @@
     </main>
 
     <script>
-        // Configuração CORRETA para DeepSeek no OpenRouter
+        // Configuração CORRETA para DeepSeek no OpenRouter (model ID atualizado)
         const API_CONFIG = {
             endpoint: "https://openrouter.ai/api/v1/chat/completions",
             apiKey: "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",
-            model: "deepseek-chat" // Model ID correto para DeepSeek
+            model: "deepseek-chat" // Model ID CORRETO para DeepSeek no OpenRouter
         };
 
         document.getElementById('generate-btn').addEventListener('click', async function() {
@@ -198,17 +198,7 @@
                 - Inclua atrações principais, restaurantes e dicas locais
                 - Use classes CSS: itinerary-day, time-slot, attraction
                 
-                Exemplo de estrutura:
-                <div class="itinerary-day">
-                    <h3>Dia 1: Explorando o Centro</h3>
-                    <div class="time-slot">
-                        <h4>Manhã</h4>
-                        <div class="attraction">
-                            <h5>Museu Nacional</h5>
-                            <p>Visita ao principal museu da cidade...</p>
-                        </div>
-                    </div>
-                </div>`;
+                Seja detalhado e prático, incluindo horários sugeridos e tempo médio em cada local.`;
                 
                 console.log("Enviando requisição para a API...");
                 const response = await fetch(API_CONFIG.endpoint, {
@@ -216,8 +206,8 @@
                     headers: {
                         "Authorization": `Bearer ${API_CONFIG.apiKey}`,
                         "Content-Type": "application/json",
-                        "HTTP-Referer": window.location.href, // Obrigatório
-                        "X-Title": "TravelGenius App" // Obrigatório
+                        "HTTP-Referer": window.location.href, // Obrigatório pelo OpenRouter
+                        "X-Title": "TravelGenius App" // Obrigatório pelo OpenRouter
                     },
                     body: JSON.stringify({
                         model: API_CONFIG.model,
