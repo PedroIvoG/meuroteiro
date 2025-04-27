@@ -2,7 +2,7 @@
 const API_CONFIG = {
     endpoint: "https://openrouter.ai/api/v1/chat/completions",
     // Chave codificada em base64 (não é segurança real, apenas ofuscação básica)
-    apiKey: atob("c2stb3ItdjEtYzQ2YzljZjE5NTk3MmVmOGZmYTY3Mjg5YzZkZGRhMTBkYzk4MzYyMWQ3ODU4ODgyYTcyMWViMGI5N2M3Y2YwMQ=="),
+    apiKey: atob("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"),
     model: "openai/gpt-3.5-turbo"
 };
 
