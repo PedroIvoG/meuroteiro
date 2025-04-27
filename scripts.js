@@ -1,9 +1,8 @@
-// Configurações da API (ofuscada)
+// Configurações atualizadas para DeepSeek
 const API_CONFIG = {
     endpoint: "https://openrouter.ai/api/v1/chat/completions",
-    // SUA NOVA CHAVE DEEPSEEK (codificada em base64)
-    apiKey: btoa("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")
-    model: "deepseek-chat"  // Modelo DeepSeek
+    apiKey: "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", // Sua chave direta (não use em produção)
+    model: "deepseek-ai/deepseek-chat" // Modelo correto para DeepSeek via OpenRouter
 };
 
 document.getElementById('generate-btn').addEventListener('click', async function() {
@@ -25,34 +24,21 @@ document.getElementById('generate-btn').addEventListener('click', async function
         displayItinerary(itinerary);
     } catch (error) {
         console.error('Erro ao gerar roteiro:', error);
-        showError('Ocorreu um erro ao gerar seu roteiro. ' + error.message);
+        showError('Erro: ' + error.message);
     } finally {
         toggleLoading(false);
     }
 });
 
 async function generateAIItinerary(city, days, interests, travelStyle) {
-    const prompt = `Atue como um especialista em planejamento de viagens da DeepSeek. 
-    Crie um roteiro COMPLETO para ${city} com ${days} dias.
-
-    DETALHES:
-    - Interesses: ${interests || 'história, cultura, gastronomia'}
-    - Estilo: ${getTravelStyleName(travelStyle)}
-    - Formato:
-      * Dias divididos em manhã/tarde/noite
-      * Cada atividade com:
-        - Nome do local
-        - Descrição detalhada
-        - Horário recomendado
-        - Tempo estimado
-        - Dicas práticas
-      * Sugestões de restaurantes com:
-        - Tipo de culinária
-        - Faixa de preço
-        - Especialidades
-
-    RETORNE em HTML com classes:
-    - itinerary-card, day-title, time-slot, attraction, tips`;
+    const prompt = `Atue como um especialista em planejamento de viagens. 
+    Crie um roteiro detalhado para ${city} com ${days} dias.
+    
+    REQUISITOS:
+    - Interesses: ${interests || 'gerais'}
+    - Estilo: ${travelStyle}
+    - Formato HTML com classes: itinerary-card, day-title, time-slot, attraction
+    - Inclua horários, dicas locais e sugestões de restaurantes`;
 
     const response = await callDeepSeekAPI(prompt);
     return formatAIResponse(response, city, days);
@@ -63,28 +49,48 @@ async function callDeepSeekAPI(prompt) {
         const response = await fetch(API_CONFIG.endpoint, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
                 "Authorization": `Bearer ${API_CONFIG.apiKey}`,
-                "HTTP-Referer": window.location.href,  // Requerido pelo OpenRouter
-                "X-Title": "TravelGenius"             // Identificação do app
+                "Content-Type": "application/json",
+                "HTTP-Referer": window.location.href, // Necessário para OpenRouter
+                "X-Title": "TravelPlanner" // Identificação do seu app
             },
             body: JSON.stringify({
                 model: API_CONFIG.model,
                 messages: [{role: "user", content: prompt}],
                 temperature: 0.7,
-                max_tokens: 3000
+                max_tokens: 2000
             })
         });
-        
+
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.error?.message || "Erro na API DeepSeek");
+            throw new Error(errorData.error?.message || "Erro na API");
         }
         
         return await response.json();
     } catch (error) {
-        throw new Error("Falha ao conectar com a DeepSeek. Tente novamente.");
+        throw new Error("Falha na conexão com a API");
     }
 }
 
-// ... (mantenha as demais funções como displayItinerary, showError, etc. do código anterior)
+// Funções auxiliares (mantenha as mesmas)
+function displayItinerary(content) {
+    const resultDiv = document.getElementById('result');
+    resultDiv.innerHTML = content;
+    resultDiv.style.display = 'block';
+}
+
+function showError(message) {
+    const resultDiv = document.getElementById('result');
+    resultDiv.innerHTML = `<div class="error">${message}</div>`;
+    resultDiv.style.display = 'block';
+}
+
+function toggleLoading(show) {
+    document.getElementById('loading').style.display = show ? 'block' : 'none';
+    document.getElementById('generate-btn').disabled = show;
+}
+
+function clearResult() {
+    document.getElementById('result').innerHTML = '';
+}
