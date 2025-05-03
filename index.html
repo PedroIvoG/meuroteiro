@@ -167,10 +167,11 @@
 
     <script>
         // Configuração CORRETA para DeepSeek no OpenRouter (model ID atualizado)
-      const API_CONFIG = {
+    const API_CONFIG = {
     endpoint: "https://openrouter.ai/api/v1/chat/completions",
-    apiKey: "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",
-    model: "deepseek-ai/deepseek-chat" // CORRIGIDO
+    apiKey: "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", // substitua pela sua chave real
+    model: "google/gemma-3-1b-it:fre" // modelo hipotético
+};
 };
 
         document.getElementById('generate-btn').addEventListener('click', async function() {
