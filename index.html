@@ -14,7 +14,7 @@
             --white: #ffffff;
             --error: #e63946;
         }
-        
+
         body {
             font-family: 'Poppins', sans-serif;
             line-height: 1.6;
@@ -24,7 +24,7 @@
             margin: 0 auto;
             padding: 20px;
         }
-        
+
         header {
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
@@ -33,12 +33,12 @@
             text-align: center;
             margin-bottom: 2rem;
         }
-        
+
         h1 {
             margin: 0;
             font-size: 2rem;
         }
-        
+
         .card {
             background: var(--white);
             padding: 2rem;
@@ -46,17 +46,17 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             margin-bottom: 2rem;
         }
-        
+
         .form-group {
             margin-bottom: 1.5rem;
         }
-        
+
         label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 500;
         }
-        
+
         input, select {
             width: 100%;
             padding: 12px 15px;
@@ -65,7 +65,7 @@
             font-size: 1rem;
             font-family: inherit;
         }
-        
+
         button {
             background-color: var(--primary);
             color: white;
@@ -78,22 +78,22 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
-        
+
         button:hover {
             background-color: var(--primary-dark);
         }
-        
+
         button:disabled {
             background-color: #ccc;
             cursor: not-allowed;
         }
-        
+
         #loading {
             display: none;
             text-align: center;
             margin: 1rem 0;
         }
-        
+
         .spinner {
             border: 4px solid rgba(67, 97, 238, 0.1);
             border-top: 4px solid var(--primary);
@@ -103,17 +103,17 @@
             animation: spin 1s linear infinite;
             margin: 0 auto;
         }
-        
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
+
         #result {
             display: none;
             margin-top: 2rem;
         }
-        
+
         .itinerary-day {
             background: var(--white);
             padding: 1.5rem;
@@ -121,7 +121,7 @@
             margin-bottom: 1rem;
             box-shadow: 0 3px 10px rgba(0,0,0,0.05);
         }
-        
+
         .error {
             color: var(--error);
             background-color: #fee;
@@ -134,81 +134,75 @@
 <body>
     <header>
         <h1>TravelGenius</h1>
-        <p>Roteiros de viagem com DeepSeek AI</p>
+        <p>Roteiros de viagem com OpenRouter</p>
     </header>
-    
+
     <main>
         <div class="card">
             <div class="form-group">
                 <label for="city">Cidade de Destino:</label>
                 <input type="text" id="city" placeholder="Ex: Paris, Rio de Janeiro" required>
             </div>
-            
+
             <div class="form-group">
                 <label for="days">Duração (dias):</label>
                 <input type="number" id="days" min="1" max="30" value="5" required>
             </div>
-            
+
             <div class="form-group">
                 <label for="interests">Seus Interesses:</label>
                 <input type="text" id="interests" placeholder="Ex: história, natureza, gastronomia">
             </div>
-            
+
             <button id="generate-btn">Gerar Roteiro</button>
-            
+
             <div id="loading">
                 <div class="spinner"></div>
                 <p>Gerando seu roteiro...</p>
             </div>
         </div>
-        
+
         <div id="result"></div>
     </main>
 
     <script>
-        // Configuração CORRETA para DeepSeek no OpenRouter (model ID atualizado)
-    const API_CONFIG = {
-    endpoint: "https://openrouter.ai/api/v1",
-    apiKey: "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", // substitua pela sua chave real
-    model: "google/gemma-3-1b-it:fre" // modelo hipotético
-};
-};
+        const API_CONFIG = {
+            endpoint: "https://openrouter.ai/api/v1",
+            apiKey: "sk-or-v1-e4334933f23745fa9c4b66d5c242be323fcf6631c580a180c58224600228b793sk-or-v1-567ae1263c788bce8ba083f69dd552bc28cf8088fcd7578aa6efa27c79e47030", // Substitua pela sua chave real
+            model: "openchat/openchat-3.5-1210" // Modelo gratuito funcional
+        };
 
-        document.getElementById('generate-btn').addEventListener('click', async function() {
+        document.getElementById('generate-btn').addEventListener('click', async function () {
             const city = document.getElementById('city').value.trim();
             const days = document.getElementById('days').value;
             const interests = document.getElementById('interests').value.trim();
-            
+
             if (!city) {
                 showError("Por favor, informe a cidade de destino");
                 return;
             }
-            
+
             toggleLoading(true);
             clearResult();
-            
+
             try {
                 const prompt = `Você é um especialista em planejamento de viagens. Crie um roteiro detalhado para ${city} com ${days} dias de duração.
-                
                 Interesses do viajante: ${interests || 'gerais'}
-                
                 Formato de resposta:
                 - HTML bem formatado
                 - Dividido por dias (Dia 1, Dia 2, etc.)
                 - Para cada dia, organize em manhã, tarde e noite
                 - Inclua atrações principais, restaurantes e dicas locais
                 - Use classes CSS: itinerary-day, time-slot, attraction
-                
                 Seja detalhado e prático, incluindo horários sugeridos e tempo médio em cada local.`;
-                
-                console.log("Enviando requisição para a API...");
+
                 const response = await fetch(API_CONFIG.endpoint, {
                     method: "POST",
                     headers: {
                         "Authorization": `Bearer ${API_CONFIG.apiKey}`,
                         "Content-Type": "application/json",
-                        "HTTP-Referer": window.location.href, // Obrigatório pelo OpenRouter
-                        "X-Title": "TravelGenius App" // Obrigatório pelo OpenRouter
+                        "HTTP-Referer": window.location.href,
+                        "X-Title": "TravelGenius App"
                     },
                     body: JSON.stringify({
                         model: API_CONFIG.model,
@@ -217,27 +211,21 @@
                         max_tokens: 2000
                     })
                 });
-                
-                console.log("Resposta recebida, status:", response.status);
-                
+
                 if (!response.ok) {
                     const errorData = await response.json();
-                    console.error("Erro da API:", errorData);
                     throw new Error(errorData.error?.message || "Erro na API");
                 }
-                
+
                 const data = await response.json();
-                console.log("Dados recebidos:", data);
-                
+
                 if (data.choices && data.choices[0]?.message?.content) {
                     document.getElementById('result').innerHTML = data.choices[0].message.content;
                     document.getElementById('result').style.display = 'block';
                 } else {
                     throw new Error("Resposta da API em formato inesperado");
                 }
-                
             } catch (error) {
-                console.error("Erro completo:", error);
                 showError(`Falha ao gerar roteiro: ${error.message}`);
             } finally {
                 toggleLoading(false);
