@@ -134,7 +134,7 @@
 <body>
     <header>
         <h1>TravelGenius</h1>
-        <p>Roteiros de viagem com OpenRouter</p>
+        <p>Roteiros de viagem com DeepSeek via OpenRouter</p>
     </header>
 
     <main>
@@ -168,8 +168,8 @@
     <script>
         const API_CONFIG = {
             endpoint: "https://openrouter.ai/api/v1",
-            apiKey: "sk-or-v1-e4334933f23745fa9c4b66d5c242be323fcf6631c580a180c58224600228b793sk-or-v1-567ae1263c788bce8ba083f69dd552bc28cf8088fcd7578aa6efa27c79e47030", // Substitua pela sua chave real
-            model: "openchat/openchat-3.5-1210" // Modelo gratuito funcional
+            apiKey: "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", // 🔒 Substitua pela sua chave real da OpenRouter
+            model: "deepseek/deepseek-chat-v3-0324:free"
         };
 
         document.getElementById('generate-btn').addEventListener('click', async function () {
@@ -245,6 +245,7 @@
 
         function clearResult() {
             document.getElementById('result').innerHTML = '';
+            document.getElementById('result').style.display = 'none';
         }
     </script>
 </body>
