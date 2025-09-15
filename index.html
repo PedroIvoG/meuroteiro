@@ -641,7 +641,6 @@ const response = await fetch("/api/generate", {
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ city, days, interests, budget, notes })
 });
-
 const data = await response.json();
 
 if (data.content) {
@@ -783,3 +782,4 @@ if (data.content) {
     </script>
 </body>
 </html>
+
