@@ -636,11 +636,20 @@
     <script>
 
 
-const API_CONFIG = {
-    endpoint: "https://openrouter.ai/api/v1/chat/completions",
-    apiKey: "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", // Cole sua nova chave
-    model: "deepseek/deepseek-chat" // Modelo atualizado
-};
+const response = await fetch("/api/generate", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ city, days, interests, budget, notes })
+});
+
+const data = await response.json();
+
+if (data.content) {
+  document.querySelector('.itinerary').innerHTML = data.content;
+  document.getElementById('result').style.display = 'block';
+} else {
+  showError(data.error || "Erro desconhecido");
+}
 
     
 
