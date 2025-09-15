@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Meu Roteiro - Roteiros de Viagem Inteligentes</title>
+  <meta name="description" content="Planeje sua viagem perfeita com roteiros personalizados gerados por IA" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <div class="logo">
+        <i class="fas fa-map-marked-alt"></i>
+        <h1>Meu Roteiro</h1>
+      </div>
+      <p class="tagline">Roteiros de viagem personalizados com tecnologia de IA</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="grid">
+      <div>
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Crie Seu Roteiro</h2>
+            <p class="card-subtitle">Preencha os detalhes da sua viagem</p>
+          </div>
+
+          <div class="form-group">
+            <label for="city">Destino</label>
+            <div class="input-wrapper">
+              <i class="fas fa-map-marker-alt input-icon"></i>
+              <input type="text" id="city" placeholder="Ex: Paris, Rio de Janeiro" required/>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="days">Duração da Viagem</label>
+            <div class="input-wrapper">
+              <i class="fas fa-calendar-alt input-icon"></i>
+              <input type="number" id="days" min="1" max="30" value="5" required/>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="interests">Seus Interesses</label>
+            <div class="input-wrapper">
+              <i class="fas fa-heart input-icon"></i>
+              <input type="text" id="interests" placeholder="Ex: história, natureza, gastronomia"/>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="budget">Orçamento (opcional)</label>
+            <div class="input-wrapper">
+              <i class="fas fa-wallet input-icon"></i>
+              <select id="budget">
+                <option value="">Qualquer</option>
+                <option value="Econômico">Econômico</option>
+                <option value="Médio">Médio</option>
+                <option value="Luxo">Luxo</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="notes">Observações (opcional)</label>
+            <div class="input-wrapper">
+              <i class="fas fa-edit input-icon"></i>
+              <textarea id="notes" placeholder="Alguma preferência específica? Restrições?"></textarea>
+            </div>
+          </div>
+
+          <button id="generate-btn">
+            <i class="fas fa-magic"></i> Gerar Roteiro
+          </button>
+
+          <div id="loading">
+            <div class="spinner"></div>
+            <p>Criando seu roteiro perfeito...</p>
+          </div>
+        </div>
+
+        <div class="features">
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-robot"></i></div>
+            <h3 class="feature-title">IA Avançada</h3>
+            <p class="feature-desc">Roteiros criados com tecnologia de inteligência artificial</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-map-marked-alt"></i></div>
+            <h3 class="feature-title">Personalizado</h3>
+            <p class="feature-desc">Adaptado aos seus interesses e preferências</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-globe"></i></div>
+            <h3 class="feature-title">+500 Destinos</h3>
+            <p class="feature-desc">Cobertura global de cidades e atrações</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="result">
+        <div class="result-header">
+          <h2 class="result-title">Seu Roteiro de Viagem</h2>
+          <button class="print-btn" onclick="window.print()">
+            <i class="fas fa-print"></i> Imprimir
+          </button>
+        </div>
+        <div class="itinerary"><!-- Resultado entra aqui --></div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-links">
+        <a href="#" class="footer-link">Sobre</a>
+        <a href="#" class="footer-link">Contato</a>
+        <a href="#" class="footer-link">Privacidade</a>
+        <a href="#" class="footer-link">Termos</a>
+      </div>
+      <p class="copyright">© 2025 Meu Roteiro. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
